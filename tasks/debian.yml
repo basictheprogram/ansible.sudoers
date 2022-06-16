@@ -1,0 +1,6 @@
+---
+- name: configure monolith sudoers file
+  import_tasks: monolithic_sudoers.yml
+  when:
+    - ansible_lsb.major_release|int < 20
+  tags: apache2-servers

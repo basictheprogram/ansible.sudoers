@@ -1,2 +1,18 @@
 ---
-# tasks file for sudoers
+- name: gather OS specific variables
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_distribution_release }}.yml"
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+        - "main.yml"
+      paths:
+        - "vars"
+  tags: sudoers
+
+- name: include_tasks debian.yml
+  include_tasks: debian.yml
+  when: ansible_os_family == 'Debian'
+  tags: sudoers

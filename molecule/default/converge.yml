@@ -1,7 +1,9 @@
 ---
-- name: Converge
+- name: converge
   hosts: all
+  become: true
+
   tasks:
-    - name: "Include sudoers"
-      include_role:
+    - name: include_role sudoers
+      ansible.builtin.include_role:
         name: "sudoers"
