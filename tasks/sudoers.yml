@@ -1,0 +1,20 @@
+---
+- name: make sure ssh-agent works via sudo
+  ansible.builtin.copy:
+    content: |
+      Defaults    env_keep += "SSH_AUTH_SOCK"
+
+    dest: "/etc/sudoers.d/ssh_auth_sock"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: /usr/sbin/visudo -csf %s
+  tags: sudoers
+
+- name: ansible can sudo NOPASSWD
+  community.general.sudoers:
+    name: ansible_nopasswd
+    state: present
+    user: ansible
+    commands: ALL
+  tags: sudoers
