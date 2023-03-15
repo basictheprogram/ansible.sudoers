@@ -2,11 +2,11 @@
 - name: Configure monolith sudoers file
   ansible.builtin.include_tasks: monolithic_sudoers.yml
   when:
-    - ansible_lsb.major_release|int < 20
+    - ansible_distribution_major_version|int < 5
   tags: sudoers
 
 - name: Configure sudoers
   ansible.builtin.include_tasks: sudoers.yml
   when:
-    - ansible_lsb.major_release|int >= 20
+    - ansible_distribution_major_version|int >= 5
   tags: sudoers

@@ -1,20 +1,20 @@
 ---
 # http://stackoverflow.com/questions/24124140/ssh-agent-forwarding-with-ansible
 
-- name: copy sudoers file for safety
+- name: Copy sudoers file for safety
   ansible.builtin.command: "cp -f /etc/sudoers /etc/sudoers.tmp"
   register: result
   failed_when: result.rc != 0
   changed_when: false
 
-- name: "make sure ssh-agent works via sudo"
+- name: Make sure ssh-agent works via sudo
   ansible.builtin.lineinfile:
     dest: "/etc/sudoers.tmp"
     state: "present"
     regexp: '^Defaults env_keep\+\=SSH_AUTH_SOCK'
     line: 'Defaults env_keep+=SSH_AUTH_SOCK'
 
-- name: comment out Default requiretty in sudoers
+- name: Comment out Default requiretty in sudoers
   ansible.builtin.lineinfile:
     dest: "/etc/sudoers.tmp"
     state: "present"
@@ -29,13 +29,13 @@
     regexp: '^ansible.*NOPASSWD'
     line: 'ansible ALL=(ALL) NOPASSWD:ALL'
 
-- name: final sudoers file check
+- name: Final sudoers file check
   ansible.builtin.shell: "/usr/sbin/visudo -q -c -f /etc/sudoers.tmp && cp -f /etc/sudoers.tmp /etc/sudoers"
   register: result
   failed_when: result.rc != 0
   changed_when: false
 
-- name: clean up temp file
+- name: Clean up temp file
   ansible.builtin.file:
     path: "/etc/sudoers.tmp"
     state: "absent"

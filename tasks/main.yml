@@ -1,5 +1,5 @@
 ---
-- name: gather OS specific variables
+- name: Gather OS specific variables
   ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
   vars:
     params:
@@ -7,12 +7,22 @@
         - "{{ ansible_distribution_release }}.yml"
         - "{{ ansible_distribution }}.yml"
         - "{{ ansible_os_family }}.yml"
-        - "main.yml"
+        - "default.yml"
       paths:
         - "vars"
   tags: sudoers
 
-- name: include_tasks debian.yml
-  include_tasks: debian.yml
+- name: Debug
+  ansible.builtin.debug:
+    msg: "{{ ansible_os_family }}"
+  tags: sudoers
+
+- name: Include tasks debian.yml
+  ansible.builtin.include_tasks: debian.yml
   when: ansible_os_family == 'Debian'
+  tags: sudoers
+
+- name: Include tasks redhat.yml
+  ansible.builtin.include_tasks: redhat.yml
+  when: ansible_os_family == 'RedHat'
   tags: sudoers
