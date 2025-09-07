@@ -1,28 +1,37 @@
 ---
-- name: Gather OS specific variables
-  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
-  vars:
-    params:
-      files:
-        - "{{ ansible_distribution_release }}.yml"
-        - "{{ ansible_distribution }}.yml"
-        - "{{ ansible_os_family }}.yml"
-        - "default.yml"
-      paths:
-        - "vars"
-  tags: sudoers
+# - name: Gather OS specific variables
+#   ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
+#   vars:
+#     params:
+#       files:
+#         - "{{ ansible_distribution_release }}.yml"
+#         - "{{ ansible_distribution }}.yml"
+#         - "{{ ansible_os_family }}.yml"
+#         - "default.yml"
+#       paths:
+#         - "vars"
+#   tags: sudoers
 
 - name: Debug
   ansible.builtin.debug:
-    msg: "{{ ansible_os_family }}"
+    msg: "ansible_distribution: {{ ansible_distribution }}"
+
+- name: Run rarillso.sudoers
+  ansible.builtin.import_role:
+    name: arillso.sudoers
   tags: sudoers
 
-- name: Include tasks debian.yml
+- name: Include debian.yml
   ansible.builtin.include_tasks: debian.yml
-  when: ansible_os_family == 'Debian'
+  when: ansible_distribution == 'Debian'
   tags: sudoers
 
-- name: Include tasks redhat.yml
+- name: Include ubuntu.yml
+  ansible.builtin.include_tasks: ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+  tags: sudoers
+
+- name: Include redhat.yml
   ansible.builtin.include_tasks: redhat.yml
-  when: ansible_os_family == 'RedHat'
+  when: ansible_distribution == 'RedHat'
   tags: sudoers

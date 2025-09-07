@@ -1,18 +1,25 @@
 ---
 # http://stackoverflow.com/questions/24124140/ssh-agent-forwarding-with-ansible
 
+- name: Running on an old OS
+  ansible.builtin.debug:
+    msg: "⚠️ Warning: Old OS version, proceeding anyway."
+    warn: true
+
 - name: Copy sudoers file for safety
   ansible.builtin.command: "cp -f /etc/sudoers /etc/sudoers.tmp"
   register: result
   failed_when: result.rc != 0
   changed_when: false
+  tags: sudoers
 
 - name: Make sure ssh-agent works via sudo
   ansible.builtin.lineinfile:
     dest: "/etc/sudoers.tmp"
     state: "present"
     regexp: '^Defaults env_keep\+\=SSH_AUTH_SOCK'
-    line: 'Defaults env_keep+=SSH_AUTH_SOCK'
+    line: "Defaults env_keep+=SSH_AUTH_SOCK"
+  tags: sudoers
 
 - name: Comment out Default requiretty in sudoers
   ansible.builtin.lineinfile:
@@ -21,22 +28,26 @@
     backrefs: "yes"
     regexp: '^Defaults(\s)+requiretty$'
     line: "#Defaults    requiretty"
+  tags: sudoers
 
 - name: Ansible can sudo NOPASSWD
   ansible.builtin.lineinfile:
     dest: "/etc/sudoers.tmp"
     state: "present"
-    regexp: '^ansible.*NOPASSWD'
-    line: 'ansible ALL=(ALL) NOPASSWD:ALL'
+    regexp: "^ansible.*NOPASSWD"
+    line: "ansible ALL=(ALL) NOPASSWD:ALL"
+  tags: sudoers
 
 - name: Final sudoers file check
   ansible.builtin.shell: "/usr/sbin/visudo -q -c -f /etc/sudoers.tmp && cp -f /etc/sudoers.tmp /etc/sudoers"
   register: result
   failed_when: result.rc != 0
   changed_when: false
+  tags: sudoers
 
 - name: Clean up temp file
   ansible.builtin.file:
     path: "/etc/sudoers.tmp"
     state: "absent"
   changed_when: false
+  tags: sudoers

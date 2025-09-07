@@ -1,25 +1,25 @@
 ---
-# No all problems are nails and not all solutions are hammers, but
+# Not all problems are nails and not all solutions are hammers, but
 # this works for now. Not every role needs to confirm call sudoers
 # to make sure these options are set. Should probably be in the
 # take_over role? Bootstrap role? Meta dependencies?
 #
-- name: Make sure ssh-agent works via sudo
-  ansible.builtin.copy:
-    content: |
-      Defaults    env_keep += "SSH_AUTH_SOCK"
+# - name: Make sure ssh-agent works via sudo
+#   ansible.builtin.copy:
+#     content: |
+#       Defaults    env_keep += "SSH_AUTH_SOCK"
 
-    dest: "/etc/sudoers.d/ssh_auth_sock"
-    owner: root
-    group: root
-    mode: "0440"
-    validate: /usr/sbin/visudo -csf %s
-  tags: sudoers
+#     dest: "/etc/sudoers.d/ssh_auth_sock"
+#     owner: root
+#     group: root
+#     mode: "0440"
+#     validate: /usr/sbin/visudo -csf %s
+#   tags: sudoers
 
-- name: Ansible can sudo NOPASSWD
-  community.general.sudoers:
-    name: Ansible_nopasswd
-    state: present
-    user: ansible
-    commands: ALL
-  tags: sudoers
+# - name: Ansible can sudo NOPASSWD
+#   community.general.sudoers:
+#     name: Ansible_nopasswd
+#     state: present
+#     user: ansible
+#     commands: ALL
+#   tags: sudoers

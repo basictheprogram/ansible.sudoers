@@ -2,19 +2,28 @@
 dependencies: []
 
 galaxy_info:
-  author: Bob Tanner
+  namespace: realtime
   role_name: sudoers
+  author: "Bob Tanner"
   description: Sudoers
-  company: Real Time Enterprises, Inc.
-  license: license (BSD, MIT)
-  min_ansible_version: " 2.9"
+  company: "Real Time Enterprises, Inc."
+  license: "license (BSD, MIT)"
+  min_ansible_version: "2.12"
   platforms:
+    - name: Debian
+      versions:
+        - buster
+        - bullseye
+        - bookworm
+        - trixie
     - name: Ubuntu
       versions:
         - bionic
         - focal
         - jammy
         - xenial
+        - noble
   galaxy_tags:
     - linux
     - ubuntu
+    - debian
