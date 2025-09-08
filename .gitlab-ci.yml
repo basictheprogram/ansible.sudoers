@@ -24,7 +24,6 @@ stages:
 lint:
   stage: lint
   image: python:3.13
-  needs: ["checkout"]
   before_script:
     - pip install yamllint ansible-lint
   script:
@@ -37,7 +36,6 @@ molecule:
   image: python:3.13
   services:
     - name: docker:24-dind
-  needs: ["checkout"]
   parallel:
     matrix:
       - DISTRO: ubuntu2404
