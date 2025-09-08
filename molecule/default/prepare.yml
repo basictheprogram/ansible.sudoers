@@ -3,15 +3,9 @@
   hosts: all
   become: true
 
-  vars:
-    prepare_packages:
-      - dialog
-      - less
-      - vim-tiny
-
   environment:
-    TZ: "America/Chicago"    # Keep tzdata pacakge happy
     DEBIAN_FRONTEND: "noninteractive"
+    TZ: "America/Chicago"
 
   tasks:
     - name: PREPARE update apt cache
@@ -23,10 +17,3 @@
         autoclean: true
       changed_when: false
       when: ansible_os_family == 'Debian'
-
-    - name: PREPARE install packages
-      ansible.builtin.apt:
-        name: "{{ prepare_packages }}"
-        state: present
-        install_recommends: false
-        force_apt_get: true

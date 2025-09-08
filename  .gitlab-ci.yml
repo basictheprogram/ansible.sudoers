@@ -1,0 +1,38 @@
+---
+stages:
+  - lint
+  - test
+
+variables:
+  PY_COLORS: "1"
+  ANSIBLE_FORCE_COLOR: "1"
+
+# Lint stage
+lint:
+  stage: lint
+  image: python:3.13
+  before_script:
+    - pip install yamllint
+    - cd realtime.sudoers
+  script:
+    - yamllint .
+
+# Molecule stage with matrix for multiple distros
+molecule:
+  stage: test
+  image: python:3.13
+  parallel:
+    matrix:
+      - DISTRO: ubuntu2404
+      - DISTRO: ubuntu2204
+      - DISTRO: debian13
+      - DISTRO: debian12
+      - DISTRO: debian11
+  before_script:
+    - pip install ansible molecule "molecule-plugins[docker]" docker
+    - cd realtime.sudoers
+  script:
+    - echo "Running Molecule tests for $DISTRO"
+    - MOLECULE_DISTRO=$DISTRO molecule test
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" || $CI_COMMIT_BRANCH == "master" || $CI_MERGE_REQUEST_ID

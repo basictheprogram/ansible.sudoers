@@ -1,29 +1,39 @@
 ---
 dependency:
-  name: Galaxy
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+    roles-path: molecule/default/roles
+    force: true
+
 driver:
-  name: Docker
-lint: |
-  set -e
-  yamllint .
-  ansible-lint .
+  name: docker
+
 platforms:
-  - name: Sudoers-molecule-jammy-instance
-    image: "geerlingguy/docker-ubuntu2204-ansible"
+  - name: instance
+    image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2204}-ansible:latest"
     tmpfs:
       - /run
       - /tmp
     volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
     privileged: true
     pre_build_image: true
+
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+
 provisioner:
-  name: Ansible
+  name: ansible
   playbooks:
     prepare: prepare.yml
     converge: converge.yml
   inventory:
     host_vars:
       tweak_motd: true
+
 verifier:
-  name: Testinfra
+  name: testinfra

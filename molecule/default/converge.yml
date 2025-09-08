@@ -3,7 +3,5 @@
   hosts: all
   become: true
 
-  tasks:
-    - name: Include_role sudoers
-      ansible.builtin.include_role:
-        name: "sudoers"
+  roles:
+    - role: realtime.sudoers

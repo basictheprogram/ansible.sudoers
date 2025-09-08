@@ -1,5 +1,6 @@
 ---
-dependencies: []
+dependencies:
+  - name: arillso.sudoers
 
 galaxy_info:
   namespace: realtime
