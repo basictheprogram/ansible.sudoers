@@ -1,21 +1,27 @@
 ---
-stages:
-  - lint
-  - test
-
 variables:
   PY_COLORS: "1"
   ANSIBLE_FORCE_COLOR: "1"
+
+default:
+  tags:
+    - docker
+    - castle.real-time.com
+
+stages:
+  - lint
+  - test
 
 # Lint stage
 lint:
   stage: lint
   image: python:3.13
   before_script:
-    - pip install yamllint
+    - pip install yamllint ansible-lint
     - cd realtime.sudoers
   script:
     - yamllint .
+    - ansible-lint .
 
 # Molecule stage with matrix for multiple distros
 molecule:
@@ -34,5 +40,3 @@ molecule:
   script:
     - echo "Running Molecule tests for $DISTRO"
     - MOLECULE_DISTRO=$DISTRO molecule test
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule" || $CI_COMMIT_BRANCH == "master" || $CI_MERGE_REQUEST_ID
