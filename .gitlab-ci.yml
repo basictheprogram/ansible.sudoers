@@ -11,16 +11,30 @@ default:
     - castle.real-time.com
 
 stages:
+  - checkout
   - lint
   - test
+
+# Checkout stage – make sure we get the ansible-core-2.19 branch
+checkout:
+  stage: checkout
+  image: alpine:latest
+  script:
+    - apk add --no-cache git
+    - git fetch origin ansible-core-2.19
+    - git checkout ansible-core-2.19
+  artifacts:
+    paths:
+      - ./
+    expire_in: 1h
 
 # Lint stage
 lint:
   stage: lint
   image: python:3.13
+  needs: ["checkout"]
   before_script:
     - pip install yamllint ansible-lint
-    - cd realtime.sudoers
   script:
     - yamllint .
     - ansible-lint .
@@ -29,6 +43,7 @@ lint:
 molecule:
   stage: test
   image: python:3.13
+  needs: ["checkout"]
   parallel:
     matrix:
       - DISTRO: ubuntu2404
@@ -38,7 +53,6 @@ molecule:
       - DISTRO: debian11
   before_script:
     - pip install ansible molecule "molecule-plugins[docker]" docker
-    - cd realtime.sudoers
   script:
     - echo "Running Molecule tests for $DISTRO"
     - MOLECULE_DISTRO=$DISTRO molecule test
