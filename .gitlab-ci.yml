@@ -4,6 +4,8 @@ variables:
   ANSIBLE_FORCE_COLOR: "1"
   GIT_HTTP_USER: gitlab-ci-token
   GIT_HTTP_PASSWORD: ${CI_JOB_TOKEN}
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_TLS_CERTDIR: ""
 
 default:
   tags:
@@ -42,7 +44,9 @@ lint:
 # Molecule stage with matrix for multiple distros
 molecule:
   stage: test
-  image: python:3.13
+  image: docker:24
+  services:
+    - docker:24-dind
   needs: ["checkout"]
   parallel:
     matrix:
@@ -52,8 +56,10 @@ molecule:
       - DISTRO: debian12
       - DISTRO: debian11
   before_script:
+    - apk add --no-cache python3 py3-pip bash git
     - chmod 755 $CI_PROJECT_DIR
-    - pip install ansible molecule "molecule-plugins[docker]" docker
+    - pip3 install ansible molecule "molecule-plugins[docker]" docker
+    - cd realtime.sudoers
   script:
     - echo "Running Molecule tests for $DISTRO"
     - MOLECULE_DISTRO=$DISTRO molecule test
