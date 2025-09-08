@@ -2,6 +2,8 @@
 variables:
   PY_COLORS: "1"
   ANSIBLE_FORCE_COLOR: "1"
+  GIT_HTTP_USER: gitlab-ci-token
+  GIT_HTTP_PASSWORD: ${CI_JOB_TOKEN}
 
 default:
   tags:
@@ -40,4 +42,3 @@ molecule:
   script:
     - echo "Running Molecule tests for $DISTRO"
     - MOLECULE_DISTRO=$DISTRO molecule test
-    
