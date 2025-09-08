@@ -52,6 +52,7 @@ molecule:
       - DISTRO: debian12
       - DISTRO: debian11
   before_script:
+    - chmod 755 $CI_PROJECT_DIR
     - pip install ansible molecule "molecule-plugins[docker]" docker
   script:
     - echo "Running Molecule tests for $DISTRO"
