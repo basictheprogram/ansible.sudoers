@@ -40,3 +40,4 @@ molecule:
   script:
     - echo "Running Molecule tests for $DISTRO"
     - MOLECULE_DISTRO=$DISTRO molecule test
+    
