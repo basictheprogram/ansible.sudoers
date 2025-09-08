@@ -1,3 +1,5 @@
+[![pipeline status](https://gitlab.real-time.com/ansible-roles/sudoers/badges/ansible-core-2.19/pipeline.svg)](https://gitlab.real-time.com/ansible-roles/sudoers/-/commits/ansible-core-2.19)
+
 Role Name
 =========
 
