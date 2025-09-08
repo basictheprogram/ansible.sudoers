@@ -46,7 +46,7 @@ molecule:
   stage: test
   image: python:3.13
   services:
-    - docker:24-dind
+    - name: docker:24-dind
   needs: ["checkout"]
   parallel:
     matrix:
@@ -63,3 +63,4 @@ molecule:
   script:
     - echo "Running Molecule tests for $DISTRO"
     - MOLECULE_DISTRO=$DISTRO molecule test
+  privileged: true

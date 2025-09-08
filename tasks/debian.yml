@@ -2,11 +2,11 @@
 - name: Configure Debian monolith sudoers file
   ansible.builtin.include_tasks: monolithic_sudoers.yml
   when:
-    - ansible_lsb.major_release|int < 6
+    - ansible_distribution_major_version | int < 6
   tags: sudoers
 
 - name: Configure Debian sudoers
   ansible.builtin.include_tasks: sudoers.yml
   when:
-    - ansible_lsb.major_release|int >= 6
+    - ansible_distribution_major_version | int >= 6
   tags: sudoers
