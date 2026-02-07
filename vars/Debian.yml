@@ -1,0 +1,4 @@
+---
+sudoers_packages:
+  - sudo
+  - lsb-release

@@ -1,1 +1,88 @@
 ---
+# No all problems are nails and not all solutions are hammers, but
+# this works for now. Not every role needs to confirm call sudoers
+# to make sure these options are set. Should probably be in the
+# take_over role? Bootstrap role? Meta dependencies?
+#
+- name: Make sure ssh-agent works via sudo
+  ansible.builtin.copy:
+    content: |
+      Defaults    env_keep += "SSH_AUTH_SOCK"
+
+    dest: "/etc/sudoers.d/ssh_auth_sock"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: /usr/sbin/visudo -csf %s
+  tags: sudoers
+
+- name: Ansible can sudo NOPASSWD
+  community.general.sudoers:
+    name: ansible_nopasswd
+    state: present
+    user: ansible
+    commands: ALL
+  tags: sudoers
+
+- name: Debug the list of users
+  ansible.builtin.debug:
+    var: group_support_users
+  tags: sudoers
+
+- name: Check if veeam12 is in the user list
+  ansible.builtin.debug:
+    msg: "'veeam12' found in group_support_users"
+  when: "'veeam12' in (group_support_users | selectattr('username', 'equalto', 'veeam12') | map(attribute='username') | list)"
+  tags: sudoers
+
+- name: Configure sudoers from weeam12
+  block:
+    - name: Veeam12 can sudo VEEAM12_COMMANDS
+      ansible.builtin.copy:
+        content: |
+          Cmnd_Alias VEEAM12_COMMANDS = /usr/bin/whoami, \
+            /usr/bin/id, \
+            /usr/bin/tar, \
+            /usr/bin/gzip, \
+            /usr/bin/touch, \
+            /usr/bin/uname, \
+            /sbin/blkid, \
+            /usr/bin/cat, \
+            /usr/bin/mkdir, \
+            /usr/bin/ls, \
+            /usr/bin/arch, \
+            /usr/sbin/lvs, \
+            /usr/bin/chmod, \
+            /usr/bin/updatedb, \
+            /usr/bin/cp, \
+            /usr/bin/btrfs, \
+            /usr/bin/ln, \
+            /usr/bin/sh, \
+            /tmp/*, \
+            /usr/bin/rm -f /var/lib/veeam12/*, \
+            /usr/bin/rm -rf /tmp/*, \
+            /usr/bin/rm -f /tmp/*
+
+          veeam12 ALL=(root) NOPASSWD: VEEAM12_COMMANDS
+
+        dest: "/etc/sudoers.d/veeam12_nopasswd"
+        owner: root
+        group: root
+        mode: "0440"
+        validate: /usr/sbin/visudo -csf %s
+  when: "'veeam12' in (group_support_users | selectattr('username', 'equalto', 'veeam12') | map(attribute='username') | list)"
+  tags: sudoers
+
+- name: Ensure all files in /etc/sudoers.d/ have mode 0440
+  ansible.builtin.find:
+    paths: /etc/sudoers.d/
+    recurse: true
+    file_type: file
+  register: sudoers_files
+
+- name: Set mode to 0440 for files in /etc/sudoers.d/
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: '0440'
+  loop: "{{ sudoers_files.files }}"
+  when: sudoers_files.matched > 0
