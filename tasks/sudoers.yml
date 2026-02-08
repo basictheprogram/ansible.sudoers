@@ -1,9 +1,4 @@
 ---
-# No all problems are nails and not all solutions are hammers, but
-# this works for now. Not every role needs to confirm call sudoers
-# to make sure these options are set. Should probably be in the
-# take_over role? Bootstrap role? Meta dependencies?
-#
 - name: Make sure ssh-agent works via sudo
   ansible.builtin.copy:
     content: |
@@ -16,12 +11,14 @@
     validate: /usr/sbin/visudo -csf %s
   tags: sudoers
 
-- name: Ansible can sudo NOPASSWD
+- name: Management users can sudo NOPASSWD
   community.general.sudoers:
-    name: ansible_nopasswd
+    name: "{{ item.username }}"
     state: present
-    user: ansible
+    user: "{{ item.username }}"
     commands: ALL
+    nopassword: true
+  loop: "{{ management_user }}"
   tags: sudoers
 
 - name: Debug the list of users
@@ -35,7 +32,14 @@
   when: "'veeam12' in (group_support_users | selectattr('username', 'equalto', 'veeam12') | map(attribute='username') | list)"
   tags: sudoers
 
-- name: Configure sudoers from weeam12
+- name: Configure sudoers from veeam12
+  when: >
+    'veeam12' in
+    (group_support_users
+      | selectattr('username', 'equalto', 'veeam12')
+      | map(attribute='username')
+      | list)
+  tags: sudoers
   block:
     - name: Veeam12 can sudo VEEAM12_COMMANDS
       ansible.builtin.copy:
@@ -64,14 +68,11 @@
             /usr/bin/rm -f /tmp/*
 
           veeam12 ALL=(root) NOPASSWD: VEEAM12_COMMANDS
-
-        dest: "/etc/sudoers.d/veeam12_nopasswd"
+        dest: /etc/sudoers.d/veeam12
         owner: root
         group: root
         mode: "0440"
         validate: /usr/sbin/visudo -csf %s
-  when: "'veeam12' in (group_support_users | selectattr('username', 'equalto', 'veeam12') | map(attribute='username') | list)"
-  tags: sudoers
 
 - name: Ensure all files in /etc/sudoers.d/ have mode 0440
   ansible.builtin.find:
@@ -79,10 +80,12 @@
     recurse: true
     file_type: file
   register: sudoers_files
+  tags: sudoers
 
 - name: Set mode to 0440 for files in /etc/sudoers.d/
   ansible.builtin.file:
     path: "{{ item.path }}"
-    mode: '0440'
+    mode: "0440"
   loop: "{{ sudoers_files.files }}"
   when: sudoers_files.matched > 0
+  tags: sudoers

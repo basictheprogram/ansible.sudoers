@@ -16,7 +16,7 @@ repos:
         files: requirements.txt|\.gitignore|\.dockerignore
 
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.37.1
+    rev: v1.38.0
     hooks:
       - id: yamllint
         files: \.(yaml|yml)$
@@ -24,24 +24,12 @@ repos:
         entry: yamllint --strict -f parsable
 
   - repo: https://github.com/zricethezav/gitleaks
-    rev: v8.28.0
+    rev: v8.30.0
     hooks:
       - id: gitleaks
 
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.12
-    hooks:
-      - id: ruff
-        name: Ruff check
-        description: "Run 'ruff check' for extremely fast Python linting"
-        args: [--fix]
-
-      - id: ruff-format
-        name: Ruff format
-        description: "Run 'ruff format' for extremely fast Python formatting"
-
   - repo: https://github.com/hadolint/hadolint
-    rev: v2.13.1
+    rev: v2.14.0
     hooks:
       - id: hadolint
         name: Lint Dockerfiles
@@ -51,13 +39,10 @@ repos:
         entry: hadolint
 
   - repo: https://github.com/ansible/ansible-lint
-    rev: v25.8.2
+    rev: v26.1.1
     hooks:
       - id: ansible-lint
         files: \.(yaml|yml)$
         name: Ansible Lint
         description: Run configurations on .ansible-lint file
         verbose: false
-
-ci:
-  autoupdate_schedule: weekly

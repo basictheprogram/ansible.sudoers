@@ -31,9 +31,6 @@ provisioner:
   playbooks:
     prepare: prepare.yml
     converge: converge.yml
-  inventory:
-    host_vars:
-      tweak_motd: true
 
 verifier:
   name: testinfra

@@ -1,6 +1,5 @@
 ---
-dependencies:
-  - name: arillso.sudoers
+dependencies: []
 
 galaxy_info:
   namespace: realtime
@@ -8,8 +7,8 @@ galaxy_info:
   author: "Bob Tanner"
   description: Sudoers
   company: "Real Time Enterprises, Inc."
-  license: "license (BSD, MIT)"
-  min_ansible_version: "2.12"
+  license: "MIT"
+  min_ansible_version: "2.20"
   platforms:
     - name: Debian
       versions:
@@ -24,7 +23,13 @@ galaxy_info:
         - jammy
         - xenial
         - noble
+    - name: EL
+      versions:
+        - "9"
   galaxy_tags:
     - linux
     - ubuntu
     - debian
+    - el
+    - sudo
+    - system
