@@ -1,5 +1,11 @@
 ---
-- name: Make sure ssh-agent works via sudo
+# Ubuntu 26+ sudoers configuration
+# Note: Ubuntu 26 ships several system utilities rewritten in Rust
+# (e.g. sudo-rs) that are not backwards compatible with older sudo
+# configurations. Tasks here should use module options and command
+# paths appropriate for the new toolchain.
+
+- name: Make sure ssh-agent works via sudo (Ubuntu 26+)
   ansible.builtin.copy:
     content: |
       Defaults    env_keep += "SSH_AUTH_SOCK"
@@ -11,7 +17,7 @@
     validate: /usr/sbin/visudo -csf %s
   tags: sudoers
 
-- name: Management users can sudo NOPASSWD
+- name: Management users can sudo NOPASSWD (Ubuntu 26+)
   community.general.sudoers:
     name: "{{ item.username }}"
     state: present
@@ -21,25 +27,11 @@
   loop: "{{ management_user }}"
   tags: sudoers
 
-- name: Log sudo commands
-  ansible.builtin.copy:
-    content: |
-      Defaults        logfile="/var/log/sudo.log"
-
-    dest: "/etc/sudoers.d/logfile"
-    mode: "0440"
-  tags: sudoers
-
-- name: Debug the list of users
-  ansible.builtin.debug:
-    var: group_support_users
-  tags: sudoers
-
-- name: Include veeam12 sudoers tasks
+- name: Include veeam12 sudoers tasks (Ubuntu 26+)
   ansible.builtin.include_tasks: veeam12.yml
   tags: sudoers
 
-- name: Ensure all files in /etc/sudoers.d/ have mode 0440
+- name: Ensure all files in /etc/sudoers.d/ have mode 0440 (Ubuntu 26+)
   ansible.builtin.find:
     paths: /etc/sudoers.d/
     recurse: true
@@ -47,7 +39,7 @@
   register: sudoers_files
   tags: sudoers
 
-- name: Set mode to 0440 for files in /etc/sudoers.d/
+- name: Set mode to 0440 for files in /etc/sudoers.d/ (Ubuntu 26+)
   ansible.builtin.file:
     path: "{{ item.path }}"
     mode: "0440"
