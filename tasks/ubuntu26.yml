@@ -27,6 +27,12 @@
   loop: "{{ management_user }}"
   tags: sudoers
 
+- name: Remove legacy logfile sudoers drop-in (Ubuntu 26+)
+  ansible.builtin.file:
+    path: /etc/sudoers.d/logfile
+    state: absent
+  tags: sudoers
+
 - name: Include veeam12 sudoers tasks (Ubuntu 26+)
   ansible.builtin.include_tasks: veeam12.yml
   tags: sudoers
