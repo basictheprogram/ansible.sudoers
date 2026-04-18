@@ -2,18 +2,18 @@
 - name: Configure Ubuntu monolith sudoers file
   ansible.builtin.include_tasks: monolithic_sudoers.yml
   when:
-    - ansible_distribution_major_version | int < 20
+    - ansible_facts['distribution_major_version'] | int < 20
   tags: sudoers
 
 - name: Configure Ubuntu sudoers
   ansible.builtin.include_tasks: sudoers.yml
   when:
-    - ansible_distribution_major_version | int >= 20
-    - ansible_distribution_major_version | int < 26
+    - ansible_facts['distribution_major_version'] | int >= 20
+    - ansible_facts['distribution_major_version'] | int < 26
   tags: sudoers
 
 - name: Configure Ubuntu 26+ sudoers
   ansible.builtin.include_tasks: ubuntu26.yml
   when:
-    - ansible_distribution_major_version | int >= 26
+    - ansible_facts['distribution_major_version'] | int >= 26
   tags: sudoers
