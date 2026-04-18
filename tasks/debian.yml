@@ -1,5 +1,5 @@
 ---
-- name: Debian install backuppc client packages (apt)
+- name: Debian install sudo packages (apt)
   ansible.builtin.apt:
     name: "{{ sudoers_packages }}"
     state: "present"

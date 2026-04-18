@@ -23,6 +23,7 @@ galaxy_info:
         - jammy
         - xenial
         - noble
+        - resolute
     - name: EL
       versions:
         - "9"
