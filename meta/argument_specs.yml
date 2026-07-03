@@ -22,12 +22,14 @@ argument_specs:
         required: true
         description:
           - List of users who should be granted passwordless (NOPASSWD)
-            sudo for all commands. Each entry must define username.
-        options:
-          username:
-            type: str
-            required: true
-            description: The account name to grant NOPASSWD sudo to.
+            sudo for all commands. Each entry must define username; this
+            role ignores any other keys, so no per-key sub-schema is
+            declared here -- consumers pass a shared user-definition
+            object (comment, groups, home, public_keys, shell, skel_dir,
+            etc.) that carries fields other roles use but this one does
+            not. Declaring an options block would reject those extra
+            keys outright (see tasks/preflight.yml for the actual
+            username check this role enforces).
       group_support_users:
         type: list
         elements: dict
@@ -36,9 +38,6 @@ argument_specs:
           - List of support users considered by role-specific sudoers
             drop-ins (e.g. the veeam12 restricted command alias, which
             checks this list for a user named veeam12). Each entry must
-            define username.
-        options:
-          username:
-            type: str
-            required: true
-            description: The account name.
+            define username; see the management_user note above -- same
+            shared user-definition shape, same reason no options block
+            is declared.
