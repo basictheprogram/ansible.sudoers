@@ -1,0 +1,62 @@
+---
+- name: Assert ansible-core version is new enough
+  ansible.builtin.assert:
+    that:
+      - ansible_version.full is version('2.20', '>=')
+    fail_msg: >-
+      The sudoers role requires ansible-core >= 2.20 (found
+      {{ ansible_version.full }}).
+    quiet: true
+
+- name: Assert distribution is supported
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['distribution'] in ['Debian', 'Ubuntu', 'RedHat']
+    fail_msg: >-
+      The sudoers role only configures Debian, Ubuntu, and RedHat hosts;
+      {{ ansible_facts['distribution'] }} is not supported and would
+      otherwise silently receive no sudoers configuration.
+    quiet: true
+
+- name: Assert management_user is defined and non-empty
+  ansible.builtin.assert:
+    that:
+      - management_user is defined
+      - management_user | length > 0
+    fail_msg: >-
+      management_user must be defined as a non-empty list of dicts, each
+      with a username key, granting NOPASSWD sudo access.
+    quiet: true
+
+- name: Assert every management_user entry has a username
+  ansible.builtin.assert:
+    that:
+      - item.username is defined
+      - item.username | length > 0
+    fail_msg: "Every management_user entry must define a non-empty username."
+    quiet: true
+  loop: "{{ management_user }}"
+  loop_control:
+    label: "{{ item.username | default('(unnamed)') }}"
+
+- name: Assert group_support_users is defined
+  ansible.builtin.assert:
+    that:
+      - group_support_users is defined
+      - group_support_users is sequence
+    fail_msg: >-
+      group_support_users must be defined as a list of dicts (each with a
+      username key); the veeam12 sudoers drop-in checks this list for a
+      user named veeam12.
+    quiet: true
+
+- name: Assert every group_support_users entry has a username
+  ansible.builtin.assert:
+    that:
+      - item.username is defined
+      - item.username | length > 0
+    fail_msg: "Every group_support_users entry must define a non-empty username."
+    quiet: true
+  loop: "{{ group_support_users }}"
+  loop_control:
+    label: "{{ item.username | default('(unnamed)') }}"

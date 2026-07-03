@@ -7,23 +7,14 @@
     force_apt_get: true
   tags: sudoers
 
-- name: Configure monolith sudoers file (ubuntu)
+- name: Configure monolith sudoers file (debian)
   ansible.builtin.include_tasks: monolithic_sudoers.yml
   when:
-    - ansible_distribution == "Ubuntu"
-    - ansible_lsb.major_release|int < 20
-  tags: sudoers
-
-- name: Configure sudoers (ubunu)
-  ansible.builtin.include_tasks: sudoers.yml
-  when:
-    - ansible_distribution == "Ubuntu"
-    - ansible_lsb.major_release|int >= 20
+    - ansible_facts['distribution_major_version'] | int < 12
   tags: sudoers
 
 - name: Configure sudoers (debian)
   ansible.builtin.include_tasks: sudoers.yml
   when:
-    - ansible_distribution == "Debian"
-    - ansible_lsb.major_release|int >= 12
+    - ansible_facts['distribution_major_version'] | int >= 12
   tags: sudoers

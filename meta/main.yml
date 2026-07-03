@@ -5,32 +5,25 @@ galaxy_info:
   namespace: realtime
   role_name: sudoers
   author: "Bob Tanner"
-  description: Sudoers
+  description: >-
+    Manages sudo access via /etc/sudoers.d/ drop-in files: SSH-agent
+    passthrough, passwordless NOPASSWD sudo for management users, sudo
+    command logging, and a restricted veeam12 backup command alias, for
+    Debian (bookworm, trixie), Ubuntu (jammy, noble, resolute), and
+    Enterprise Linux (9).
   company: "Real Time Enterprises, Inc."
   license: "MIT"
   min_ansible_version: "2.20"
-  platforms:
-    - name: Debian
-      versions:
-        - buster
-        - bullseye
-        - bookworm
-        - trixie
-    - name: Ubuntu
-      versions:
-        - bionic
-        - focal
-        - jammy
-        - xenial
-        - noble
-        - resolute
-    - name: EL
-      versions:
-        - "9"
+  issue_tracker_url: "https://gitlab.real-time.com/ansible-roles/sudoers/-/issues"
   galaxy_tags:
     - linux
-    - ubuntu
     - debian
+    - ubuntu
     - el
     - sudo
-    - system
+    - sudoers
+    - security
+    - ssh
+    - logging
+    - users
+    - veeam

@@ -34,15 +34,11 @@
             /usr/bin/cp, \
             /usr/bin/btrfs, \
             /usr/bin/ln, \
-            /usr/bin/sh, \
-            /tmp/*, \
-            /usr/bin/rm -f /var/lib/veeam12/*, \
-            /usr/bin/rm -rf /tmp/*, \
-            /usr/bin/rm -f /tmp/*
+            /usr/bin/sh
 
           veeam12 ALL=(root) NOPASSWD: VEEAM12_COMMANDS
         dest: /etc/sudoers.d/veeam12
         owner: root
         group: root
         mode: "0440"
-        validate: /usr/sbin/visudo -csf %s
+        validate: /usr/sbin/visudo -cf %s

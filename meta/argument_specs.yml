@@ -1,0 +1,44 @@
+---
+argument_specs:
+  main:
+    short_description: Manage sudo access via /etc/sudoers.d/ drop-in files
+    description:
+      - Installs sudo (and, on Debian/Ubuntu, lsb-release) and configures
+        SSH-agent passthrough, passwordless NOPASSWD sudo for a list of
+        management users, sudo command logging, and a restricted veeam12
+        backup command alias, all via drop-in files under /etc/sudoers.d/.
+    options:
+      sudoers_packages:
+        type: list
+        elements: str
+        required: false
+        default: []
+        description:
+          - Packages to install before configuring sudoers. Overridden per
+            OS family in vars/ (e.g. sudo and lsb-release on Debian/Ubuntu).
+      management_user:
+        type: list
+        elements: dict
+        required: true
+        description:
+          - List of users who should be granted passwordless (NOPASSWD)
+            sudo for all commands. Each entry must define username.
+        options:
+          username:
+            type: str
+            required: true
+            description: The account name to grant NOPASSWD sudo to.
+      group_support_users:
+        type: list
+        elements: dict
+        required: true
+        description:
+          - List of support users considered by role-specific sudoers
+            drop-ins (e.g. the veeam12 restricted command alias, which
+            checks this list for a user named veeam12). Each entry must
+            define username.
+        options:
+          username:
+            type: str
+            required: true
+            description: The account name.

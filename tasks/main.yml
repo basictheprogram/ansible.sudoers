@@ -1,4 +1,8 @@
 ---
+- name: Run preflight assertions
+  ansible.builtin.include_tasks: preflight.yml
+  tags: always
+
 - name: Gather OS specific variables
   ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
   vars:
@@ -9,18 +13,13 @@
         - "{{ ansible_facts['os_family'] }}.yml"
         - "main.yml"
       paths:
-        - "defaults"
+        - "vars"
   tags: sudoers
 
 - name: Debug
   ansible.builtin.debug:
     msg: "ansible_distribution: {{ ansible_facts['distribution'] }}"
   tags: sudoers
-
-# - name: Run arillso.sudoers
-#   ansible.builtin.import_role:
-#     name: arillso.sudoers
-#   tags: sudoers
 
 - name: Include debian.yml
   ansible.builtin.include_tasks: debian.yml
