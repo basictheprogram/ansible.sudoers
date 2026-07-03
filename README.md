@@ -4,6 +4,16 @@ Ansible Role: sudoers
 [![pipeline status](https://gitlab.real-time.com/ansible-roles/sudoers/badges/ansible-core-2.19/pipeline.svg)](https://gitlab.real-time.com/ansible-roles/sudoers/-/commits/ansible-core-2.19)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+> **Fork notice** — This is a fork of
+> [arillso/ansible.sudoers](https://github.com/arillso/ansible.sudoers) by
+> Arillso. The role originally depended on `arillso.sudoers` as a Galaxy
+> dependency; that dependency was later removed and reimplemented
+> natively, so almost none of the original task/template code remains —
+> but the fork lineage and copyright carry forward (see `LICENSE`).
+> Bugs, feature requests, and pull requests for this fork should be
+> submitted to
+> **[basictheprogram/ansible.sudoers](https://github.com/basictheprogram/ansible.sudoers/issues)**.
+
 Manages sudo access on Debian, Ubuntu, and RedHat/EL systems by dropping
 files into `/etc/sudoers.d/`: SSH-agent passthrough, passwordless
 (`NOPASSWD`) sudo for a list of management users, sudo command logging,
@@ -107,4 +117,8 @@ MIT
 Author Information
 --------------------
 
-Bob Tanner, Real Time Enterprises, Inc.
+Originally created by Arillso ([arillso/ansible.sudoers](https://github.com/arillso/ansible.sudoers)).
+
+This fork is maintained by Bob Tanner, Real Time Enterprises, Inc., at
+[basictheprogram/ansible.sudoers](https://github.com/basictheprogram/ansible.sudoers).
+Please open issues and pull requests there.

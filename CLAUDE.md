@@ -1,5 +1,14 @@
 # Claude Code project notes — sudoers
 
+Fork of [arillso/ansible.sudoers](https://github.com/arillso/ansible.sudoers)
+by Arillso. This fork lives at
+[basictheprogram/ansible.sudoers](https://github.com/basictheprogram/ansible.sudoers).
+Bugs and pull requests go to the fork repo, not upstream. The role
+originally depended on arillso.sudoers as a Galaxy dependency; that
+dependency was later removed and its behavior reimplemented natively,
+so almost none of the original task/template code remains, but the
+fork lineage and copyright carry forward (see LICENSE).
+
 Manages sudo access on Debian, Ubuntu, and RedHat/EL systems by dropping
 files into `/etc/sudoers.d/`: SSH-agent forwarding under sudo, passwordless
 (`NOPASSWD`) sudo for a list of management users, sudo command logging, a

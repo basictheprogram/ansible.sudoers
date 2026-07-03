@@ -3,11 +3,6 @@
 Flagged during the `ansible-sync-role` sync (2026-07-03) but not resolved
 in that session.
 
-* **No `LICENSE` file exists.** `meta/main.yml` and `README.md` both claim
-  MIT, but there is no actual `LICENSE` file in the repo to back that up.
-  Add one (Step 5b of the sync skill will stack a Real Time Enterprises
-  copyright line onto it once it exists).
-
 * **`.gitlab-ci.yml` is stale relative to this sync** and was intentionally
   left untouched (out of scope for `ansible-sync-role`):
   * `BRANCH_NAME: "ansible-core-2.19"` — the role now targets ansible-core
@@ -41,11 +36,3 @@ in that session.
   all). Now every consumer must define both, even ones that currently only
   hit the legacy monolithic path. Flagging per the sync's decision to make
   this check unconditional rather than OS-version-conditional.
-
-* **`tasks/veeam12.yml` has a pre-existing uncommitted local change** that
-  predates this sync session (removes several `rm -rf /tmp/*`-style
-  commands from `VEEAM12_COMMANDS` and loosens `visudo` validation from
-  `-csf` to `-cf`). This sync did not touch that file or that change —
-  it's still sitting in the working tree and will be included in whatever
-  commit follows. Worth a deliberate look before committing, since it's a
-  security-relevant sudoers command list.
